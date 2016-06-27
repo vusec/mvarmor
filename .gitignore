@@ -1,0 +1,40 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.gcda
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# Kernel module stuff
+*.ko
+*.mod.c
+*.cmd
+Module.symvers
+modules.order
+.tmp_versions/
+
+# Python
+*.pyc
+*.pyo
+
+# Misc
+logs/
+*.log
+*.tar
+*.tar.gz
+*~
+*.tmp
+*.d
+
+# Project specific (eg built binaries)
+dune_sandbox/multivar_dune_sandbox
+ptrace/multivar_ptrace
+deps/
