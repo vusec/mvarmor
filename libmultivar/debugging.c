@@ -767,6 +767,16 @@ void syscall_print_saved(struct syscall *syscall, pid_t pid, long rv, long orig_
         print(", %d", mode);
         break;
     }
+    case SYS_chown:
+    {
+        const char *path = (const char *)arg_data[0];
+        uid_t owner = (uid_t)orig_args[1];
+        gid_t group = (gid_t)orig_args[2];
+        print_str(path);
+        print(", %d", owner);
+        print(", %d", group);
+        break;
+    }
     case SYS_umask:
     {
         int res = orig_args[0];
@@ -785,6 +795,12 @@ void syscall_print_saved(struct syscall *syscall, pid_t pid, long rv, long orig_
         int res = orig_args[0];
         void *rlim = (void *)orig_args[1];
         print("%d, %p", res, rlim);
+        break;
+    }
+    case SYS_setgid:
+    {
+        gid_t gid = orig_args[0];
+        print("%d", gid);
         break;
     }
     case SYS_geteuid:

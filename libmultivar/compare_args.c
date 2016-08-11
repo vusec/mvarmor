@@ -735,6 +735,14 @@ int compare_args(struct syscall *syscall1, struct syscall *syscall2)
         mode_t mode1 = orig_args1[1], mode2 = orig_args2[1];
         return mode1 == mode2 && !strcmp(path1, path2);
     }
+    case SYS_chown:
+    {
+        const char *path1 = (const char *)arg_data1[0],
+                   *path2 = (const char *)arg_data2[0];
+        uid_t owner1 = orig_args1[1], owner2 = orig_args2[1];
+        gid_t group1 = orig_args1[2], group2 = orig_args2[2];
+        return owner1 == owner2 && group1 == group2 && !strcmp(path1, path2);
+    }
     case SYS_umask:
     {
         mode_t mask1 = orig_args1[0], mask2 = orig_args2[0];
@@ -761,12 +769,32 @@ int compare_args(struct syscall *syscall1, struct syscall *syscall2)
     }
     case SYS_getuid:
     case SYS_getgid:
+        /* No args */
+        return 1;
+    case SYS_setuid:
+    {
+        uid_t uid1 = orig_args1[0], uid2 = orig_args2[0];
+        return uid1 == uid2;
+    }
+    case SYS_setgid:
+    {
+        gid_t gid1 = orig_args1[0], gid2 = orig_args2[0];
+        return gid1 == gid2;
+    }
     case SYS_geteuid:
     case SYS_getegid:
     case SYS_getppid:
     case SYS_setsid:
         /* No args */
         return 1;
+    case SYS_setgroups:
+    {
+        int setsize1 = orig_args1[0], setsize2 = orig_args2[0];
+        const gid_t *groups1 = (const gid_t *)arg_data1[1],
+                    *groups2 = (const gid_t *)arg_data2[1];
+        return setsize1 == setsize2 &&
+            !memcmp(groups1, groups2, setsize1 * sizeof(gid_t));
+    }
     case SYS_capget:
     {
         cap_user_header_t hdrp1 = (cap_user_header_t)arg_data1[0],
