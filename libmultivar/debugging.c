@@ -807,6 +807,16 @@ void syscall_print_saved(struct syscall *syscall, pid_t pid, long rv, long orig_
     case SYS_setsid:
         /* No args */
         break;
+    case SYS_setgroups:
+    {
+        int size = orig_args[0];
+        gid_t *list = (gid_t *)arg_data[1];
+        print("%d, { ", size);
+        for (i = 0; i < (unsigned)size; i++)
+            print("%d, ", list[i]);
+        print("}");
+        break;
+    }
     case SYS_rt_sigsuspend:
     {
         void *mask = (void *)orig_args[0];
